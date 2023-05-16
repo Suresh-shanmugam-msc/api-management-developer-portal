@@ -8,33 +8,37 @@
 <div class="flex flex-column fit animation-fade-in" data-bind="dialog: {}">
     <div class="flex-item flex-grow">
         <div class="panel panel-dark" data-bind="with: consoleOperation">
-            <button type="button" tabindex="0" class="no-border pull-right" data-dismiss="modal"
+            <button type="button" tabindex="0" class="no-border pull-right try-it-out-close" data-dismiss="modal"
                 aria-label="Close console" data-bind="click: $parents[1].closeConsole">
                 <i class="icon-emb icon-emb-simple-remove"></i>
             </button>
 
-            <nav aria-label="breadcrumb" style="margin-right: 20px">
-                <ol class="breadcrumb">
-                    <li class="breadcrumb-item">
-                        <a href="#"
-                            data-bind="text: api.displayName, attr: { href: $component.getApiReferenceUrl() }"></a>
-                    </li>
-                    <!-- ko if: api.apiVersion -->
-                    <li class="breadcrumb-item">
-                        <span data-bind="text: api.apiVersion"></span>
-                    </li>
-                    <!-- /ko -->
+            <div class="custom-popup">
+                <div class="text-monospace text-wrap" data-bind="text: urlTemplate, attr: { 'data-method': method }"></div>
 
-                    <!-- ko ifnot: api.type === 'websocket' -->
-                    <li class="breadcrumb-item text-wrap">
-                        <span data-bind="text: name"></span>
-                    </li>
-                    <!-- /ko -->
-                </ol>
-            </nav>
+                <nav aria-label="breadcrumb" style="margin-right: 20px">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item d-none">
+                            <a href="#"
+                                data-bind="text: api.displayName, attr: { href: $component.getApiReferenceUrl() }"></a>
+                        </li>
+                        <!-- ko if: api.apiVersion -->
+                        <li class="breadcrumb-item">
+                            <span data-bind="text: api.apiVersion"></span>
+                        </li>
+                        <!-- /ko -->
+
+                        <!-- ko ifnot: api.type === 'websocket' -->
+                        <li class="breadcrumb-item text-wrap">
+                            <span data-bind="text: name"></span>
+                        </li>
+                        <!-- /ko -->
+                    </ol>
+                </nav>
+            </div>
 
             <!-- ko ifnot: api.type === 'websocket' -->
-            <div class="text-monospace text-wrap" data-bind="text: urlTemplate, attr: { 'data-method': method }"></div>
+            <!-- <div class="text-monospace text-wrap" data-bind="text: urlTemplate, attr: { 'data-method': method }"></div> -->
             <!-- /ko -->
 
             <!-- ko if: $component.hostnameSelectionEnabled() || $component.showHostnameInput() -->
@@ -380,7 +384,7 @@
         </div>
 
         <!-- ko ifnot: api().type === 'websocket' -->
-        <div class="panel panel-dark panel-highlight flex-item flex-grow menu menu-horizontal">
+        <div class="panel panel-dark panel-highlight flex-item flex-grow menu menu-horizontal mx-2">
             <h3>HTTP request
                 <button aria-label="Collapse parameters" class="no-border"
                     data-bind="activate: $component.collapseRequest">
@@ -497,7 +501,7 @@
                 <!-- /ko -->
             </div>
 
-            <div class="flex flex-column align-items-end">
+            <div class="flex flex-column align-items-end px-2">
                 <div class="btn-group" role="group">
                     <button type="button" class="button button-primary btn-sm"
                         data-bind="click: wsSendData, attr: { disabled: wsSending }, text: wsSendStatus">
@@ -557,7 +561,7 @@
 
         <!-- ko if: $component.selectedLanguage() === 'http' -->
         <!-- ko if: requestError -->
-        <div class="panel panel-dark" data-bind="scrollintoview: {}">
+        <div class="panel panel-dark mx-2" data-bind="scrollintoview: {}">
             <p>Unable to complete the request</p>
             <p class="text-muted" data-bind="html: requestError"></p>
         </div>
@@ -579,7 +583,7 @@
 
     <div class="flex-item panel">
         <!-- ko ifnot: working -->
-        <div class="flex flex-column align-items-end">
+        <div class="flex flex-column align-items-end px-2">
             <div class="btn-group" role="group">
                 <!-- ko if: !$component.sendingRequest() && $component.selectedLanguage() === 'http' -->
                 <button type="button" class="button button-primary btn-sm" data-bind="click: validateAndSendRequest">

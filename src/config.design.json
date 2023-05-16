@@ -1,7 +1,7 @@
 {
-    "environment": "development",
-    "managementApiUrl": "https://<service-name>.management.azure-api.net",
-    "managementApiAccessToken": "SharedAccessSignature ...",
-    "backendUrl": "https://<service-name>.developer.azure-api.net",
+    "environment": "undefined",
+    "managementApiUrl": "https://apimtestmsc.management.azure-api.net",
+    "managementApiAccessToken": "SharedAccessSignature integration&20230614074421&ivZabOIKQMUM6OZT6e+aqoa+33b2ByY7WkMaRN72NwA4rSTGEmNjQNzTNvGblPrh2zcznNZuH97cDBENX3QkiQ==",
+    "backendUrl": "https://apimtestmsc.developer.azure-api.net",
     "useHipCaptcha": false
 }

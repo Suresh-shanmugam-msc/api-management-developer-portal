@@ -53,7 +53,7 @@ export class TypeDefinitionViewModel {
 
     @OnMounted()
     public initialize(): void {
-        this.schemaView(this.defaultSchemaView() || "table");
+        this.schemaView("raw");
         this.rawSchema(this.definition.rawSchema);
         this.rawSchemaFormat(this.definition.rawSchemaFormat);
 

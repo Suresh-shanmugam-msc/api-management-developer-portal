@@ -4,30 +4,47 @@
 
 <!-- ko ifnot: working -->
 
+<!-- ko if: $component.consoleIsOpen -->
+<!-- ko ifnot: apiType() === 'graphql' -->
+<div class="detachable-right flex-grow animation-fade-in">
+    <operation-console class="block scrollable consoles operation-console"
+        params="{ api: api, operation: operation, hostnames: hostnames, authorizationServer: associatedAuthServer, useCorsProxy: useCorsProxy }">
+    </operation-console>
+</div>
+<!-- /ko -->
+<!-- ko if: apiType() === 'graphql' -->
+<div class="detachable-right graphql-console-width flex-grow animation-fade-in">
+    <graphql-console class="flex flex-column consoles" data-bind="dialog: {}"
+        params="{ api: api, hostnames: hostnames, authorizationServer: associatedAuthServer, useCorsProxy: useCorsProxy }">
+    </graphql-console>
+</div>
+<!-- /ko -->
+<!-- /ko -->
+
 <!-- ko ifnot: apiType() === 'websocket' -->
 <!-- ko if: operation -->
-<div class="animation-fade-in">
+<div class="animation-fade-in px-2">
     <div class="row flex flex-row">
-        <div class="col-md-11  text-wrap">
+        <div class="col-md-10 text-wrap">
             <h2 class="operation-name">
                 <span data-bind="text: operation().displayName"></span>
             </h2>
         </div>
         <!-- ko if: $component.enableConsole -->
-        <div class="col-md-1">
-            <button class="open-console-button" data-bind="click: $component.openConsole">Try it <i
-                    class="icon-emb icon-emb-play"></i>
+        <div class="col-md-2">
+            <button class="open-console-button" data-bind="click: $component.openConsole">Try it out
+                <!-- <i class="icon-emb icon-emb-play"></i> -->
             </button>
         </div>
         <!-- /ko -->
     </div>
 
     <!-- ko if: operation().description  -->
-    <div data-bind="markdown: operation().description"></div>
+    <div class="try-it-section" data-bind="markdown: operation().description"></div>
     <!-- /ko -->
 
     <!-- ko if: tags().length > 0 -->
-    <div class="tag-group">
+    <div class="tag-group d-none">
         <!-- ko foreach: { data: $component.tags, as: 'tag' } -->
         <span class="tag-item" role="group" data-bind="text: tag"></span>
         <!-- /ko -->
@@ -35,7 +52,7 @@
     <!-- /ko -->
 
     <div class="collapsible">
-        <h3>Request</h3>
+        <h3 class="req-heading">Request</h3>
 
         <div class="collapsible-container">
             <span class="text-monospace text-wrap"
@@ -44,26 +61,26 @@
             <!-- ko if: operation().parameters.length > 0 -->
             <h4>Request parameters</h4>
 
-            <div role="table" class="table-preset table-preset-params">
-                <div class="d-contents" role="rowgroup">
-                    <div class="d-contents" role="row">
+            <div role="table" class="table-preset table-preset-params parameter-content">
+                <div class="parameter-head" role="rowgroup">
+                    <div class="parameter-head-row" role="row">
                         <div role="columnheader" class="table-preset-head text-truncate">Name</div>
                         <div role="columnheader" class="table-preset-head text-truncate">In</div>
                         <div role="columnheader" class="table-preset-head text-truncate">Required</div>
                         <div role="columnheader" class="table-preset-head text-truncate">Type</div>
-                        <div role="columnheader" class="table-preset-head">Example</div>
+                        <div role="columnheader" class="table-preset-head d-none">Example</div>
                         <div role="columnheader" class="table-preset-head">Description</div>
                     </div>
                 </div>
-                <div class="d-contents" role="rowgroup">
+                <div class="parameter-body" role="rowgroup">
                     <!-- ko foreach: { data: operation().parameters, as: 'parameter' } -->
-                    <div class="d-contents" role="row">
+                    <div class="parameter-body-row" role="row">
                         <div role="cell" class="text-truncate text-monospace"
                             data-bind="text: parameter.name, attr: { title: parameter.name }"></div>
                         <div role="cell" class="text-truncate" data-bind="text: parameter.in"></div>
                         <div role="cell" class="text-truncate" data-bind="text: parameter.required"></div>
                         <div role="cell" class="text-truncate text-monospace" data-bind="text: parameter.type"></div>
-                        <div role="cell">
+                        <div role="cell" class="d-none">
                             <!-- ko foreach: { data: parameter.examples, as: 'example' } -->
                             <p>
                                 <!-- ko ifnot: example.title === "default" && !example.description && parameter.examples.length === 1 -->
@@ -137,7 +154,7 @@
                 <input class="tab-radio" type="radio" name="requestContentType"
                     data-bind="attr : { id: 'request' + representation.contentType + '_' + $index(), checked: $index() === 0 }">
 
-                <label class="tab-label"
+                <label class="tab-label d-none"
                     data-bind="attr : { for: 'request' + representation.contentType + '_' + $index() }, text: representation.contentType"></label>
 
                 <div class="tab-content">
@@ -189,7 +206,7 @@
             <!-- /ko -->
 
             <!-- ko foreach: { data: operation().getMeaningfulResponses(), as: 'response' } -->
-            <h3>Response: <span data-bind="text: response.statusCode"></span></h3>
+            <h3 class="mt-0">Response: <span data-bind="text: response.statusCode"></span></h3>
             <!-- ko if: response.description -->
             <p data-bind="markdown: response.description"></p>
             <!-- /ko -->
@@ -223,11 +240,11 @@
             <!-- /ko -->
 
             <!-- ko if: response.meaningfulRepresentations().length > 0 -->
-            <div class="tabs" data-bind="foreach: { data: meaningfulRepresentations(), as: 'representation' }">
+            <div class="tabs custom-tab-section" data-bind="foreach: { data: meaningfulRepresentations(), as: 'representation' }">
                 <input class="tab-radio" type="radio"
                     data-bind="attr: { id: response.identifier + '_' + $index(), name: response.identifier, checked: $index() === 0 }">
 
-                <label class="tab-label"
+                <label class="tab-label d-none"
                     data-bind="attr: { for: response.identifier + '_' + $index() }, text: representation.contentType"></label>
 
                 <div class="tab-content">
@@ -293,13 +310,13 @@
 <!-- ko if: apiType() === 'websocket' -->
 <!-- ko if: operation -->
 <div class="animation-fade-in row flex flex-row">
-    <div class="col-md-11 text-wrap">
+    <div class="col-md-10 text-wrap">
         <h2 class="operation-name">
             <span data-bind="text: operation().displayName"></span>
         </h2>
     </div>
     <!-- ko if: $component.enableConsole -->
-    <div class="col-md-1">
+    <div class="col-md-2">
         <button class="open-console-button" data-bind="click: $component.openConsole">Try it <i
                 class="icon-emb icon-emb-play"></i>
         </button>
@@ -352,19 +369,4 @@
 
 <!-- /ko -->
 
-<!-- ko if: $component.consoleIsOpen -->
-<!-- ko ifnot: apiType() === 'graphql' -->
-<div class="detachable-right flex-grow animation-fade-in">
-    <operation-console class="block scrollable consoles operation-console"
-        params="{ api: api, operation: operation, hostnames: hostnames, authorizationServer: associatedAuthServer, useCorsProxy: useCorsProxy }">
-    </operation-console>
-</div>
-<!-- /ko -->
-<!-- ko if: apiType() === 'graphql' -->
-<div class="detachable-right graphql-console-width flex-grow animation-fade-in">
-    <graphql-console class="flex flex-column consoles" data-bind="dialog: {}"
-        params="{ api: api, hostnames: hostnames, authorizationServer: associatedAuthServer, useCorsProxy: useCorsProxy }">
-    </graphql-console>
-</div>
-<!-- /ko -->
-<!-- /ko -->
+ 
